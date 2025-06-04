@@ -17,6 +17,7 @@ export class Chat implements OnInit {
   isPaid = false;
 showPaymentModal = false;
   showPaymentPrompt = false; // Added this line
+  showAuthModal = false; // modal for login/register when not logged in
 
   chatHistory = [
     { title: 'Startup Talk' },
@@ -60,17 +61,22 @@ showPaymentModal = false;
             this.showPaymentModal = true;
           }
         } else {
-          window.location.href = 'register';
+          this.userId = null;
         }
       },
       error: () => {
-        window.location.href = 'register';
+        this.userId = null;
       }
     });
   }
 
 sendMessage() {
-  if (!this.userMessage.trim() || !this.userId) return;
+  if (!this.userMessage.trim()) return;
+
+  if (!this.userId) {
+    this.showAuthModal = true;
+    return;
+  }
 
   const message = this.userMessage;
   this.messages.push({ from: 'user', text: message });
